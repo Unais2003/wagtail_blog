@@ -20,3 +20,16 @@ class BlogPage(Page):
         FieldPanel('intro'),
         FieldPanel('body'),
     ]
+
+
+class BlogIndexPage(Page):
+    intro = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+    ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['posts'] = BlogPage.objects.child_of(self).live()
+        return context
