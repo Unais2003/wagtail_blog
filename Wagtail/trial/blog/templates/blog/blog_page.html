@@ -2,71 +2,66 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
+<div class="container py-5">
 
-{% if page.featured_image %}
-    <img src="{{ page.featured_image.url }}" class="img-fluid rounded mb-4">
-{% endif %}
-
-<h1>{{ page.title }}</h1>
-<p class="text-muted">{{ page.date }}</p>
-
-{% if page.author %}
-<div class="d-flex align-items-center mb-3">
-
-    {% if page.author.photo %}
-        {% image page.author.photo fill-80x80 as author_pic %}
-        <img src="{{ author_pic.url }}"
-             style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin-right:15px;">
+    {% if page.featured_image %}
+        {% image page.featured_image fill-1200x500 as hero_img %}
+        <img src="{{ hero_img.url }}" class="img-fluid rounded mb-4">
     {% endif %}
 
-    <div>
-        <strong>{{ page.author.name }}</strong><br>
-
-        {% if page.author.bio %}
-            <small class="text-muted">{{ page.author.bio|striptags|truncatechars:120 }}</small><br>
-        {% endif %}
-
-        {% if page.author.linkedin %}
-            <a href="{{ page.author.linkedin }}" target="_blank">LinkedIn</a>
-        {% endif %}
-
-        {% if page.author.twitter %}
-            • <a href="{{ page.author.twitter }}" target="_blank">Twitter</a>
-        {% endif %}
-    </div>
-</div>
-{% endif %}
+    <h1 class="fw-bold mb-2">{{ page.title }}</h1>
+    <p class="text-muted">{{ page.date }}</p>
 
 
-{% if page.category %}
-    <p>
-        <span class="badge bg-secondary">{{ page.category.name }}</span>
-    </p>
-{% endif %}
+    {% if page.author %}
+        <div class="d-flex align-items-center mb-4 p-3 bg-light rounded">
+            
+            {% if page.author.photo %}
+                {% image page.author.photo fill-100x100 as author_pic %}
+                <img src="{{ author_pic.url }}" 
+                     style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-right:15px;">
+            {% endif %}
 
-<!-- Tags -->
-{% if page.tags.all %}
-    <p>
-        {% for tag in page.tags.all %}
-            <span class="badge bg-primary">{{ tag }}</span>
-        {% endfor %}
-    </p>
-{% endif %}
+            <div>
+                <h5 class="mb-1">{{ page.author.name }}</h5>
 
-<hr>
+                {% if page.author.bio %}
+                    <p class="text-muted small">{{ page.author.bio|striptags|truncatechars:120 }}</p>
+                {% endif %}
+
+                {% if page.author.linkedin %}
+                    <a href="{{ page.author.linkedin }}" target="_blank">LinkedIn</a>
+                {% endif %}
+                {% if page.author.twitter %}
+                    • <a href="{{ page.author.twitter }}" target="_blank">Twitter</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+  
+    {% if page.category %}
+        <p><span class="badge bg-secondary">{{ page.category.name }}</span></p>
+    {% endif %}
 
 
-<div class="intro">
-    {{ page.intro|richtext }}
-</div>
-
-<hr>
-
-
-<div class="body">
-    {% for block in page.body %}
-        {% include_block block %}
+    {% for tag in page.tags.all %}
+        <span class="badge bg-primary me-1">{{ tag }}</span>
     {% endfor %}
-</div>
 
+    <hr class="my-4">
+
+
+    <div class="mb-4">
+        {{ page.intro|richtext }}
+    </div>
+
+
+    <div>
+        {% for block in page.body %}
+            {% include_block block %}
+        {% endfor %}
+    </div>
+
+</div>
 {% endblock %}
