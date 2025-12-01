@@ -1,16 +1,67 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
 
+{% if page.featured_image %}
+    <img src="{{ page.featured_image.url }}" class="img-fluid rounded mb-4">
+{% endif %}
+
 <h1>{{ page.title }}</h1>
-<p><strong>{{ page.date }}</strong></p>
+<p class="text-muted">{{ page.date }}</p>
+
+{% if page.author %}
+<div class="d-flex align-items-center mb-3">
+
+    {% if page.author.photo %}
+        {% image page.author.photo fill-80x80 as author_pic %}
+        <img src="{{ author_pic.url }}"
+             style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin-right:15px;">
+    {% endif %}
+
+    <div>
+        <strong>{{ page.author.name }}</strong><br>
+
+        {% if page.author.bio %}
+            <small class="text-muted">{{ page.author.bio|striptags|truncatechars:120 }}</small><br>
+        {% endif %}
+
+        {% if page.author.linkedin %}
+            <a href="{{ page.author.linkedin }}" target="_blank">LinkedIn</a>
+        {% endif %}
+
+        {% if page.author.twitter %}
+            • <a href="{{ page.author.twitter }}" target="_blank">Twitter</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+
+{% if page.category %}
+    <p>
+        <span class="badge bg-secondary">{{ page.category.name }}</span>
+    </p>
+{% endif %}
+
+<!-- Tags -->
+{% if page.tags.all %}
+    <p>
+        {% for tag in page.tags.all %}
+            <span class="badge bg-primary">{{ tag }}</span>
+        {% endfor %}
+    </p>
+{% endif %}
+
+<hr>
+
 
 <div class="intro">
     {{ page.intro|richtext }}
 </div>
 
 <hr>
+
 
 <div class="body">
     {% for block in page.body %}
